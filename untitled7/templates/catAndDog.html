@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <title></title>
+        <style>
+            div{width: 100%;}
+            .logo img{display:block; margin:0 auto;}
+            .upload{position: relative;width: 80px;height: 18px;line-height: 18px;background: #2fc7c9;text-align: center;
+                    color: #FFF;padding: 0px 5px;-webkit-border-radius: 2px;border-radius: 2px;
+                    margin: 0 auto;
+                    }
+            .upload form{width:100%;position:absolute; left:0; top:0;opacity:0; filter:alpha(opacity=0);}
+            .upload form input{width: 100%;}
+        </style>
+    </head>
+    <body>
+    <div class="logo">
+        <img id ="picture" src="/sss/img/test1.jpg" width="500px" height="400px"/>
+    </div>
+    <div class="upload">
+            <p>上传图片</p>
+            <form id="uploadForm" enctype="multipart/form-data" method="post" action="/cat/">
+               <input type="file" name="imageFile" id="imageFile" onchange="fileSelected()" />
+            </form>
+        </div>
+    <p id="resu" style="text-align: center">结果是：</p>
+{#    <div style="text-align: center">#}
+{#         <input type="text" value="结果是：" id="resu" onfocus="this.blur()" />#}
+{#    </div>#}
+
+<script>
+    function fileSelected() {
+        f=document.getElementById('imageFile').files[0];
+        asrc = window.URL.createObjectURL(f);
+        document.getElementById('picture').src=asrc;
+        var xhr = new XMLHttpRequest();                            // 创建XMLHttpRequest 对象
+        var fm = new FormData()                                    // 创建表单
+        var file_obj = document.getElementById('imageFile').files[0]    // 获取上传的文件对象
+        console.log(file_obj)                                      // 打印文件对象
+        fm.append('file',file_obj)                                //  将文件对象添加到form 里面
+        xhr.open('post', '/editProfile/', true);                       //  创建post 请求
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {                            //  服务期返回 状态码 4的时候
+                console.log(xhr.responseText)                     //   打印服务器回调信息
+                if (xhr.response=="1"){
+                    document.getElementById('resu').innerText="结果是：狗";
+                } else if (xhr.response=="0") {
+                    document.getElementById('resu').innerText="结果是：猫";
+                }else {
+                     document.getElementById('resu').innerText=xhr.responseText;
+                }
+                 alert("判断成功");
+
+            };
+        };
+        xhr.send(fm)                                              //   发送数据，请求中包含 文件
+    }
+
+</script>
+    </body>
+</html>
